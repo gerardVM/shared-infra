@@ -1,4 +1,4 @@
-# Centralized Infra
+# Shared Infra
 
 This repository provides backend buckets and other resources that may be used by several repositories.
 
