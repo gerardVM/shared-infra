@@ -1,0 +1,19 @@
+aws:
+  name: "centralized-infra"                     # Name for your resources
+  region: "ue-east-1"                           # Choose an AWS region
+  buckets:
+    - "bucket1"                                 # Bucket for terraform state
+    - "bucket2"                                 # Bucket for terraform state
+  kms-keys:
+    - name: "key1"                              # Name for the KMS key
+      description: "Description1"               # Description for the KMS key
+      deletion_window: null                     # Deletion window in days (Having this makes it free)
+      key_usage: "ENCRYPT_DECRYPT"              # Key usage
+    - name: "key2"                              # Name for the KMS key
+      description: "Description2"               # Description for the KMS key
+      deletion_window: 7                        # Deletion window in days (Having this makes it free)
+      key_usage: "ENCRYPT_DECRYPT"              # Key usage
+  budgets:
+    - name: "Budget1"                           # Name for the budget
+      limit: "1000.0 USD"                       # Budget limit
+      notify: "example@gmail.com"               # Email to notify
