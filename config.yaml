@@ -1,5 +1,5 @@
 aws:
-  name: "centralized-infra"                     # Name for your resources
+  name: "shared-infra"                          # Name for your resources
   region: "ue-east-1"                           # Choose an AWS region
   buckets:
     - "bucket1"                                 # Bucket for terraform state
