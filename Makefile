@@ -6,6 +6,9 @@ KMS_KEY         ?= arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe
 decrypt-config:
 	@if [ ${ENCRYPTED} = true ]; then sops -d config.enc.yaml > config.yaml; fi
 
+encrypt-config:
+	@sops -e --kms ${KMS_KEY} --input-type yaml config.yaml > config.enc.yaml
+
 decrypt-tfstate:
 	@if [ ${ENCRYPTED} = true ]; then \
 		cd ${TF_DIR}; \
