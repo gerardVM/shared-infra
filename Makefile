@@ -60,6 +60,3 @@ tf-destroy-unenc:
 	@cd ${TF_DIR} && terraform destroy
 
 tf-destroy: decrypt-tfstate tf-destroy-unenc encrypt-tfstate
-
-
-tf-deploy: tf-plan tf-apply
