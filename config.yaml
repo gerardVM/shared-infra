@@ -15,6 +15,6 @@ aws:
   budgets:
     - name: "Budget1"                           # Name for the budget
       limit: "1000.0 USD"                       # Budget limit
-      notify: "example@gmail.com"               # Email to notify
+      notify: "example@example.com"             # Email to notify
   ses:
       - example@example.com

@@ -1,4 +1,4 @@
-resource "aws_budgets_budget" "cheap" {
+resource "aws_budgets_budget" "budget" {
     count            = length(local.aws.budgets)
 
     budget_type       = "COST"
