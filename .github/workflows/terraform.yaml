@@ -1,0 +1,29 @@
+name: terraform
+
+on:
+  push:
+    branches:
+      - main
+      - oidc
+
+jobs:
+  update-infra:
+    name: Update infra
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::1234567890:role/example-role
+          role-session-name: shared-infra
+          aws-region: eu-west-3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.4
+      - name: Terraform Deploy/Destroy
+        run: |
+          make tf-plan ENCRYPTED=true
+          make tf-apply ENCRYPTED=true
