@@ -13,7 +13,6 @@ jobs:
     env:
       ROLE_TO_ASSUME: ${{ vars.ROLE_TO_ASSUME }}
       AWS_REGION: ${{ vars.AWS_REGION }}
-      SOPS_VERSION: $(curl -sL https://api.github.com/repos/mozilla/sops/releases/latest | jq -r '.tag_name')
     permissions:
       id-token: write
     steps:
@@ -22,15 +21,16 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${ROLE_TO_ASSUME}
+          role-to-assume: $ROLE_TO_ASSUME
           role-session-name: shared-infra
-          aws-region: ${AWS_REGION}
+          aws-region: $AWS_REGION
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.4.4
       - name: Install sops
         run: |
+          SOPS_VERSION: $(curl -sL https://api.github.com/repos/mozilla/sops/releases/latest | jq -r '.tag_name')
           wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
           chmod +x /tmp/sops
           sudo mv /tmp/sops /usr/local/bin/sops
