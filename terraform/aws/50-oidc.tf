@@ -12,11 +12,7 @@ locals {
 data "aws_iam_policy_document" "kms_policy" {
   statement {
     effect = "Allow"
-    actions = [
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:DescribeKey"
-    ]
+    actions = [ "kms:*" ]
     resources = ["*"]
   }
 }
