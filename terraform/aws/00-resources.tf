@@ -14,5 +14,6 @@ provider "aws" {
 }
 
 locals {
-    aws = yamldecode(file("${path.root}/../../config.yaml")).aws
+    aws  = yamldecode(file("${path.root}/../../config.yaml")).aws
+    sops = yamldecode(file("${path.root}/../../config.enc.yaml")).sops
 }

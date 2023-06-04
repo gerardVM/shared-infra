@@ -9,6 +9,19 @@ locals {
     ])
 }
 
+data "aws_iam_policy_document" "kms_policy" {
+    
+  statement {
+    effect = "Allow"
+    actions = [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:DescribeKey"
+    ]
+    resources = [ for item in local.sops.kms : item.arn]
+  }
+}
+
 resource "aws_iam_openid_connect_provider" "oidc" {
   count = can(local.aws.oidc) ? 1 : 0
 
@@ -49,4 +62,12 @@ resource "aws_iam_role_policy_attachment" "oidc" {
 
   role       = aws_iam_role.oidc[each.value.role].name
   policy_arn = "arn:aws:iam::aws:policy/${each.value.policy}"
+}
+
+resource "aws_iam_role_policy" "kms" {
+  for_each = local.aws.oidc.roles
+
+  name   = "${each.key}-kms"
+  role   = aws_iam_role.oidc[each.key].name
+  policy = data.aws_iam_policy_document.kms_policy.json
 }
