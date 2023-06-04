@@ -17,6 +17,7 @@ jobs:
   test-infra:
     name: Test infra update
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -39,17 +40,11 @@ jobs:
       - name: Terraform Plan
         run: |
           make tf-plan ENCRYPTED=true
-      - name: Persist tfplan as artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: tf-plan
-          path: ./terraform/aws/tfplan.out
 
   deploy-infra:
     name: Update infra
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs: test-infra
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -69,10 +64,7 @@ jobs:
           wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
           chmod +x /tmp/sops
           sudo cp /tmp/sops /usr/local/bin/sops
-      - name: Download terraform plan
-        uses: actions/download-artifact@v2
-        with:
-          name: tf-plan
-          path: ./terraform/aws/tfplan.out
       - name: Terraform Apply
-        run: make tf-apply ENCRYPTED=true
+        run: |
+          make tf-plan ENCRYPTED=true
+          make tf-apply ENCRYPTED=true
