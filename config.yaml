@@ -1,5 +1,18 @@
 aws:
   region: "us-east-1"                           # Choose an AWS region
+  oidc:                                         # OIDC configuration 
+    url: https://oidc-url.com
+    client_id_list:
+        - 1234567890
+    thumbprint_list:
+        - 1234567890
+    roles:
+      role1:
+        policies:
+            - AmazonEC2FullAccess
+            - AmazonS3FullAccess
+        repositories:
+            - repo:octo-org/octo-repo:*
   buckets:
     - "bucket1"                                 # Bucket for terraform state
     - "bucket2"                                 # Bucket for terraform state
