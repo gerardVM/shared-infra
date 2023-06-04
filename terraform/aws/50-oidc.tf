@@ -10,7 +10,6 @@ locals {
 }
 
 data "aws_iam_policy_document" "kms_policy" {
-    
   statement {
     effect = "Allow"
     actions = [
@@ -18,7 +17,7 @@ data "aws_iam_policy_document" "kms_policy" {
         "kms:Decrypt",
         "kms:DescribeKey"
     ]
-    resources = [ for item in local.sops.kms : item.arn]
+    resources = ["*"]
   }
 }
 
