@@ -9,7 +9,7 @@ jobs:
   test-infra:
     name: Test infra update
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/oidc2'
+    if: github.ref == 'refs/heads/oidc'
     permissions:
       id-token: write
     steps:
