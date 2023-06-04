@@ -44,11 +44,6 @@ jobs:
         with:
           name: tf-plan
           path: ./terraform/aws/tfplan.out
-      - name: Persist sops as artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: sops
-          path: ./usr/local/bin/sops
 
   deploy-infra:
     name: Update infra
