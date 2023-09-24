@@ -43,7 +43,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           make tf-apply ENCRYPTED=true
-      - name: git commit and push all changed files
+      - name: git commit and push tfstate files
         if: github.ref == 'refs/heads/main'
         env: 
           CI_COMMIT_MESSAGE: Update tfstate files
@@ -52,5 +52,5 @@ jobs:
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "gerardVM@users.noreply.github.com"
           git add terraform/aws/terraform.tfstate*
-          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
           git push
