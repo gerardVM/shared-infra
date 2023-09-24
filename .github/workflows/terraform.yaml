@@ -14,10 +14,9 @@ permissions:
 
 jobs:
 
-  test-infra:
-    name: Test infra update
+  run-infra:
+    name: Run infra
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -40,31 +39,7 @@ jobs:
       - name: Terraform Plan
         run: |
           make tf-plan ENCRYPTED=true
-
-  deploy-infra:
-    name: Update infra
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
-          role-session-name: shared-infra
-          aws-region: ${{ vars.AWS_REGION }}
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.4.4
-      - name: Install sops
-        run: |
-          SOPS_VERSION=$(curl -sL https://api.github.com/repos/mozilla/sops/releases/latest | jq -r '.tag_name')
-          wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
-          chmod +x /tmp/sops
-          sudo cp /tmp/sops /usr/local/bin/sops
       - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
         run: |
-          make tf-plan ENCRYPTED=true
           make tf-apply ENCRYPTED=true
