@@ -17,6 +17,8 @@ sops -e --kms <kms-key-arn> --input-type yaml config.yaml > config.enc.yaml
 ```
 and set `ENCRYPTED` variable to `true` in the `Makefile`.
 
+Be aware that since state file is not in a backend, you cannot let the pipeline apply changes automatically. You need to run `make tf-deploy` manually. Pipeline will only run `terraform plan` so you can check if there are missing any changes to apply.
+
 ## License
 
 [MIT](LICENSE.txt)

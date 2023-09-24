@@ -39,7 +39,3 @@ jobs:
       - name: Terraform Plan
         run: |
           make tf-plan ENCRYPTED=true
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: |
-          make tf-apply ENCRYPTED=true
