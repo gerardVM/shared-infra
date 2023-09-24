@@ -1,33 +1,39 @@
 aws:
-  region: "us-east-1"                           # Choose an AWS region
-  oidc:                                         # OIDC configuration 
-    url: https://oidc-url.com
-    client_id_list:
-        - 1234567890
-    thumbprint_list:
-        - 1234567890
-    roles:
-      role1:
-        policies:
-            - AmazonEC2FullAccess
-            - AmazonS3FullAccess
-        repositories:
-            - repo:octo-org/octo-repo:*
-  buckets:
-    - "bucket1"                                 # Bucket for terraform state
-    - "bucket2"                                 # Bucket for terraform state
-  kms-keys:
-    - name: "key1"                              # Name for the KMS key
-      description: "Description1"               # Description for the KMS key
-      deletion_window: null                     # Deletion window in days (Having this makes it free)
-      key_usage: "ENCRYPT_DECRYPT"              # Key usage
-    - name: "key2"                              # Name for the KMS key
-      description: "Description2"               # Description for the KMS key
-      deletion_window: 7                        # Deletion window in days (Having this makes it free)
-      key_usage: "ENCRYPT_DECRYPT"              # Key usage
-  budgets:
-    - name: "Budget1"                           # Name for the budget
-      limit: "1000.0 USD"                       # Budget limit
-      notify: "example@example.com"             # Email to notify
-  ses:
-      - example@example.com
+    name: centralized-infra
+    region: eu-west-3
+    oidc:
+        url: https://token.actions.githubusercontent.com
+        client_id_list:
+            - sts.amazonaws.com
+        thumbprint_list:
+            - 6938fd4d98bab03faadb97b34396831e3780aea1
+            - 1c58a3a8518e8759bf075b76b750d4f2df264fcd
+        roles:
+            github_actions:
+                policies:
+                    - AmazonEC2FullAccess
+                    - AmazonS3FullAccess
+                    - AmazonSESFullAccess
+                    - AWSLambda_FullAccess
+                    - IAMFullAccess
+                    - AWSBudgetsActionsWithAWSResourceControlAccess
+                    - AmazonAPIGatewayAdministrator
+                repositories:
+                    - gerardVM/shared-infra
+                    - gerardVM/ninja-vpn
+    buckets:
+        - ninja-vpn-tfstate
+        - spot-monitor-tfstate
+    kms-keys:
+        - name: permanent-key
+          description: Permanent key
+          deletion_window: null
+          key_usage: ENCRYPT_DECRYPT
+        - name: spot-monitor
+          description: KMS key for spot-monitor
+          deletion_window: 7
+          key_usage: ENCRYPT_DECRYPT
+    budgets:
+        - name: cheap-infra
+          limit: 10.0 USD
+          notify: valverdegerard@gmail.com
