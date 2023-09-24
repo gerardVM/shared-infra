@@ -39,3 +39,4 @@ jobs:
       - name: Terraform Plan
         run: |
           make tf-plan ENCRYPTED=true
+      # TODO: Push new encrypted state to main branch
