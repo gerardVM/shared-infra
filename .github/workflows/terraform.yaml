@@ -43,7 +43,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           make tf-apply ENCRYPTED=true
-      - name: GIT commit and push all changed files
+      - name: git commit and push all changed files
         if: github.ref == 'refs/heads/main'
         env: 
           CI_COMMIT_MESSAGE: Update tfstate files
