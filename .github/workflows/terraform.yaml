@@ -10,7 +10,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
 
@@ -39,4 +39,18 @@ jobs:
       - name: Terraform Plan
         run: |
           make tf-plan ENCRYPTED=true
-      # TODO: Push new encrypted state to main branch
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: |
+          make tf-apply ENCRYPTED=true
+      - name: git commit and push all changed files
+        if: github.ref == 'refs/heads/main'
+        env: 
+          CI_COMMIT_MESSAGE: Update tfstate files
+          CI_COMMIT_AUTHOR: Continuous Integration Bot
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "gerardVM@users.noreply.github.com"
+          git add terraform/aws/terraform.tfstate*
+          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push
