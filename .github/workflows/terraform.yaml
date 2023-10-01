@@ -46,7 +46,7 @@ jobs:
       - name: git commit and push tfstate files
         if: github.ref == 'refs/heads/main'
         env: 
-          CI_COMMIT_MESSAGE: Update tfstate files
+          CI_COMMIT_MESSAGE: (AUTOMATIC) Update tfstate files
           CI_COMMIT_AUTHOR: Continuous Integration Bot
         run: |
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
