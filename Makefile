@@ -35,8 +35,8 @@ tf-apply:
 tf-destroy:
 	@cd ${TF_DIR} && terraform destroy
 
-tf-plan-enc: decrypt-tfstate tf-plan encrypt-tfstate
+tf-plan-enc: decrypt-config decrypt-tfstate tf-plan encrypt-tfstate
 
 tf-apply-enc: decrypt-tfstate tf-apply encrypt-tfstate
 
-tf-destroy-enc: decrypt-tfstate tf-destroy encrypt-tfstate
+tf-destroy-enc: decrypt-config decrypt-tfstate tf-destroy encrypt-tfstate
