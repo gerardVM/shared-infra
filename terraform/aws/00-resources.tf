@@ -13,6 +13,11 @@ provider "aws" {
   region = local.aws.region
 }
 
+provider "aws" {
+  alias  = "us-east-1"
+  region = "us-east-1"
+}
+
 locals {
     aws = yamldecode(file("${path.root}/../../config.yaml")).aws
 }

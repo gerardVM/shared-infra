@@ -38,11 +38,11 @@ jobs:
           sudo cp /tmp/sops /usr/local/bin/sops
       - name: Terraform Plan
         run: |
-          make tf-plan ENCRYPTED=true
+          make tf-plan-enc
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: |
-          make tf-apply ENCRYPTED=true
+          make tf-apply-enc
       - name: git commit and push tfstate files
         if: github.ref == 'refs/heads/main'
         env: 
