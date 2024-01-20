@@ -1,5 +1,7 @@
 aws:
   region: "us-east-1"                           # Choose an AWS region
+  aws_service_access_principals:
+    - sso.amazonaws.com
   sso:
     config:
         sso_start_url: https://company.awsapps.com/start
