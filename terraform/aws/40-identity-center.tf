@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 module "iam_sso" {
   providers = { aws = aws.us-east-1 }
   
@@ -12,4 +14,24 @@ module "iam_sso" {
   users_data            = local.aws.sso.users
   groups_data           = local.aws.sso.groups
 
+}
+
+resource "aws_s3_bucket" "sso_config" {
+  bucket = "sso-${data.aws_caller_identity.current.account_id}"
+
+  provider = aws.us-east-1
+}
+
+resource "aws_s3_object" "me" {
+  bucket  = aws_s3_bucket.sso_config.id
+  key     = "config"
+  content = templatefile("./templates/config.tftpl", {
+    sso_start_url  = local.aws.sso.config.sso_start_url
+    sso_account_id = data.aws_caller_identity.current.account_id
+    sso_region     = "us-east-1"
+    sso_role_name  = local.aws.sso.config.sso_role_name
+  })
+  content_type = "text/plain"
+  
+  provider = aws.us-east-1
 }

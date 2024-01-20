@@ -1,5 +1,33 @@
 aws:
   region: "us-east-1"                           # Choose an AWS region
+  sso:
+    config:
+        sso_start_url: https://company.awsapps.com/start
+        sso_role_name: SSORole1
+    alias_to_id_map:
+        main_account: "1234567890"
+    managed_policies_map:
+        Administrator:
+            - AdministratorAccess
+    custom_policies_map: {}
+    boundary_policies_map: {}
+    administrators_group: Founders
+    cli_roles_map:
+        Administrator: []
+    users:
+        gerard:
+            name:
+                first: MyFirstName
+                last: MyLastName
+            email: example@example.com
+            cli-config: false
+            groups:
+                - Founders
+    groups:
+        Founders:
+            Administrator:
+                accounts:
+                    - main_account
   oidc:                                         # OIDC configuration 
     url: https://oidc-url.com
     client_id_list:
