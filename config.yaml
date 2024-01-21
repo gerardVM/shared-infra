@@ -2,7 +2,7 @@ aws:
   region: "us-east-1"                           # Choose an AWS region
   aws_service_access_principals:
     - sso.amazonaws.com
-  sso:
+  sso:                                          # SSO configuration
     config:
         sso_start_url: https://company.awsapps.com/start
         sso_role_name: SSORole1
@@ -11,11 +11,6 @@ aws:
     managed_policies_map:
         Administrator:
             - AdministratorAccess
-    custom_policies_map: {}
-    boundary_policies_map: {}
-    administrators_group: Founders
-    cli_roles_map:
-        Administrator: []
     users:
         gerard:
             name:
