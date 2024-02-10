@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 module "iam_sso" {
   providers = { aws = aws.us-east-1 }
   

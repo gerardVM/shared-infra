@@ -1,3 +1,7 @@
+locals {
+    aws = yamldecode(file("${path.root}/../../config.yaml")).aws
+}
+
 terraform {
   required_version = ">= 1.4.4"
 
@@ -18,6 +22,4 @@ provider "aws" {
   region = "us-east-1"
 }
 
-locals {
-    aws = yamldecode(file("${path.root}/../../config.yaml")).aws
-}
+data "aws_caller_identity" "current" {}
