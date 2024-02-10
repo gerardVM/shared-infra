@@ -32,7 +32,7 @@ resource "aws_iam_role" "oidc" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
+    Statement = concat([
         for index, repository in each.value.repositories : {
             Effect    = "Allow"
             Principal = {
@@ -48,7 +48,15 @@ resource "aws_iam_role" "oidc" {
                 }
             }
         }
-    ]
+      ],
+      [{
+        Action   = "sts:AssumeRole"
+        Effect   = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+      }]
+    )
   })
 }
 
