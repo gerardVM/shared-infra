@@ -24,24 +24,28 @@ data "aws_iam_roles" "allowed_roles" {
   name_regex = ".*${each.value.allowed}.*"
 }
 
+data "aws_iam_policy_document" "roles" {
+  for_each = local.aws.iam.roles
+
+  dynamic statement {
+    for_each = each.value.allowed
+
+    content {
+        actions      = ["sts:AssumeRole"]
+        effect       = "Allow"
+        principals {
+            type        = "AWS"
+            identifiers = data.aws_iam_roles.allowed_roles["${each.key}-${statement.value}"].arns
+        }
+    }
+  }
+}
+
 resource "aws_iam_role" "roles" {
   for_each = local.aws.iam.roles
 
-  name = each.key
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-        for allowed in each.value.allowed : {
-            Action   = "sts:AssumeRole"
-            Effect   = "Allow"
-            Principals = {
-                type = "AWS"
-                identifiers = [ data.aws_iam_roles.allowed_roles["${each.key}-${allowed}"].arns ]
-            }
-        }
-    ]
-  })
+  name               = each.key
+  assume_role_policy = data.aws_iam_policy_document.roles[each.key].json
 }
 
 resource "aws_iam_role_policy_attachment" "role_policy" {
