@@ -50,3 +50,19 @@ resource "aws_iam_role_policy_attachment" "oidc" {
   role       = aws_iam_role.oidc[each.value.role].name
   policy_arn = "arn:aws:iam::aws:policy/${each.value.policy}"
 }
+
+data "aws_iam_policy_document" "kms_policy" {
+  statement {
+    effect = "Allow"
+    actions = [ "kms:*" ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "kms" {
+  for_each = local.aws.oidc.roles
+
+  name   = "${each.key}-kms"
+  role   = aws_iam_role.oidc[each.key].name
+  policy = data.aws_iam_policy_document.kms_policy.json
+}
