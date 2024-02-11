@@ -1,6 +1,6 @@
 locals {
     oidc_policies = flatten([
-        for role, role_data in try(local.aws.oidc.roles, []) : [
+        for role, role_data in try(local.aws.iam.oidc.roles, []) : [
             for policy in try(role_data.policies, []) : {
                 role = role
                 policy = policy
@@ -9,30 +9,22 @@ locals {
     ])
 }
 
-data "aws_iam_policy_document" "kms_policy" {
-  statement {
-    effect = "Allow"
-    actions = [ "kms:*" ]
-    resources = ["*"]
-  }
-}
-
 resource "aws_iam_openid_connect_provider" "oidc" {
-  count = can(local.aws.oidc) ? 1 : 0
+  count = can(local.aws.iam.oidc) ? 1 : 0
 
-  url             = local.aws.oidc.url
-  client_id_list  = local.aws.oidc.client_id_list
-  thumbprint_list = local.aws.oidc.thumbprint_list
+  url             = local.aws.iam.oidc.url
+  client_id_list  = local.aws.iam.oidc.client_id_list
+  thumbprint_list = local.aws.iam.oidc.thumbprint_list
 }
 
 resource "aws_iam_role" "oidc" {
-  for_each = local.aws.oidc.roles
+  for_each = local.aws.iam.oidc.roles
 
   name = each.key
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = concat([
+    Statement = [
         for index, repository in each.value.repositories : {
             Effect    = "Allow"
             Principal = {
@@ -48,20 +40,7 @@ resource "aws_iam_role" "oidc" {
                 }
             }
         }
-      ],
-      [{
-        Action   = "sts:AssumeRole"
-        Effect   = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-        }
-        Condition = {
-          ArnLike = {
-            "aws:PrincipalArn" = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_Administrator*"
-          }
-        }
-      }]
-    )
+      ]
   })
 }
 
@@ -70,12 +49,4 @@ resource "aws_iam_role_policy_attachment" "oidc" {
 
   role       = aws_iam_role.oidc[each.value.role].name
   policy_arn = "arn:aws:iam::aws:policy/${each.value.policy}"
-}
-
-resource "aws_iam_role_policy" "kms" {
-  for_each = local.aws.oidc.roles
-
-  name   = "${each.key}-kms"
-  role   = aws_iam_role.oidc[each.key].name
-  policy = data.aws_iam_policy_document.kms_policy.json
 }
