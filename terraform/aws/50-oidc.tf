@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "kms_policy" {
 }
 
 resource "aws_iam_role_policy" "kms" {
-  for_each = local.aws.oidc.roles
+  for_each = local.aws.iam.oidc.roles
 
   name   = "${each.key}-kms"
   role   = aws_iam_role.oidc[each.key].name
