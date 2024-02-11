@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "roles" {
 resource "aws_iam_role" "roles" {
   for_each = local.aws.iam.roles
 
-  name = each.key
+  name               = each.key
   assume_role_policy = data.aws_iam_policy_document.roles[each.key].json
 }
 
