@@ -3,15 +3,15 @@ aws:
   aws_service_access_principals:
     - sso.amazonaws.com
   iam:
-    roles:
-      role1:                                    # Role configuration
+    roles:                                      # Role configuration
+      role1:
         policies:
             - policy_name_1
             - policy_name_2
         allowed:
             - allowed_role_name_1
             - allowed_sso_role_name_1
-    sso:                                          # SSO configuration
+    sso:                                        # SSO configuration
         config:
             sso_start_url: https://company.awsapps.com/start
             sso_role_name: SSORole1
@@ -34,7 +34,7 @@ aws:
                 Administrator:
                     accounts:
                         - main_account
-    oidc:                                         # OIDC configuration 
+    oidc:                                       # OIDC configuration 
         url: https://oidc-url.com
         client_id_list:
             - 1234567890
