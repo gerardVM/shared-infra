@@ -34,7 +34,7 @@ resource "aws_s3_object" "me" {
 # data "aws_ssoadmin_instances" "instances" {}
 
 data "aws_identitystore_groups" "groups" {
-  for_each          = local.groups
+  # for_each          = local.groups
   # identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
   identity_store_id = local.identity_store_id
 
