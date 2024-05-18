@@ -2,6 +2,7 @@ module "iam_sso" {
   providers = { aws = aws.us-east-1 }
   
   source = "github.com/gerardvm/terraform-aws-iam-identity-center?ref=2.1.0"
+  # source = "../modules/iam_sso"
 
   alias_to_id_map       = local.aws.iam.sso.alias_to_id_map
   managed_policies_map  = local.aws.iam.sso.managed_policies_map
@@ -28,4 +29,37 @@ resource "aws_s3_object" "me" {
   content_type = "text/plain"
   
   provider = aws.us-east-1
+}
+
+data "aws_ssoadmin_instances" "instances" {}
+
+data "aws_identitystore_group" "groups" {
+  for_each          = local.groups
+  # identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
+  identity_store_id = local.identity_store_id
+
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "DisplayName"
+      attribute_value = each.key
+    }
+  }
+}
+
+locals {
+  groups           = yamldecode(file("${path.root}/../../config.yaml")).aws.iam.sso.groups
+  # existing_groups  = { for group in data.aws_identitystore_group.groups.groups : group.display_name => group }
+  # identity_store_id = "ssoins-722377fb75a868a0"
+  # identity_store_id = "gerardvm"
+  # identity_store_id = "d-9067f2f77f"
+  identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
+  # groups = yamldecode(file("./example_groups.yaml"))
+}
+
+import {
+  for_each = local.groups
+
+  to = module.iam_sso.aws_identitystore_group.groups[each.key]
+  id = "${local.identity_store_id}/${data.aws_identitystore_group.groups[each.key].id}"
+  # id = "${local.identity_store_id}/${local.existing_groups[each.key].group_id}"
 }
