@@ -48,7 +48,7 @@ resource "aws_s3_object" "me" {
 
 locals {
   groups           = yamldecode(file("${path.root}/../../config.yaml")).aws.iam.sso.groups
-  existing_groups  = { for group in data.aws_identitystore_groups.groups.groups : group.display_name => group }
+  # existing_groups  = { for group in data.aws_identitystore_groups.groups.groups : group.display_name => group }
   # identity_store_id = "ssoins-722377fb75a868a0"
   # identity_store_id = "gerardvm"
   identity_store_id = "d-9067f2f77f"
