@@ -33,10 +33,10 @@ resource "aws_s3_object" "me" {
 
 # data "aws_ssoadmin_instances" "instances" {}
 
-data "aws_identitystore_groups" "groups" {
+# data "aws_identitystore_groups" "groups" {
   # for_each          = local.groups
   # identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
-  identity_store_id = local.identity_store_id
+  # identity_store_id = local.identity_store_id
 
   # alternate_identifier {
   #   unique_attribute {
@@ -44,7 +44,7 @@ data "aws_identitystore_groups" "groups" {
   #     attribute_value = each.key
   #   }
   # }
-}
+# }
 
 locals {
   groups           = yamldecode(file("${path.root}/../../config.yaml")).aws.iam.sso.groups
@@ -52,14 +52,16 @@ locals {
   # identity_store_id = "ssoins-722377fb75a868a0"
   # identity_store_id = "gerardvm"
   identity_store_id = "d-9067f2f77f"
+  group_id = "d4f84458-e0f1-7051-9483-c66df444e586"
   # identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
   # groups = yamldecode(file("./example_groups.yaml"))
 }
 
 import {
-  for_each = local.groups
+  # for_each = local.groups
 
   to = module.iam_sso.aws_identitystore_group.groups[each.key]
   # id = "${local.identity_store_id}/${data.aws_identitystore_group.groups[each.key].id}"
-  id = "${local.identity_store_id}/${local.existing_groups[each.key].group_id}"
+  # id = "${local.identity_store_id}/${local.existing_groups[each.key].group_id}"
+  id = "${local.identity_store_id}/${local.group_id}"
 }
