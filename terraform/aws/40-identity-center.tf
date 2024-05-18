@@ -60,7 +60,7 @@ locals {
 import {
   # for_each = local.groups
 
-  to = module.iam_sso.aws_identitystore_group.groups[each.key]
+  to = module.iam_sso.aws_identitystore_group.groups["Test1"]
   # id = "${local.identity_store_id}/${data.aws_identitystore_group.groups[each.key].id}"
   # id = "${local.identity_store_id}/${local.existing_groups[each.key].group_id}"
   id = "${local.identity_store_id}/${local.group_id}"
