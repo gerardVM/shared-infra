@@ -31,7 +31,7 @@ resource "aws_s3_object" "me" {
   provider = aws.us-east-1
 }
 
-data "aws_ssoadmin_instances" "instances" {}
+# data "aws_ssoadmin_instances" "instances" {}
 
 data "aws_identitystore_group" "groups" {
   for_each          = local.groups
@@ -51,8 +51,8 @@ locals {
   # existing_groups  = { for group in data.aws_identitystore_group.groups.groups : group.display_name => group }
   # identity_store_id = "ssoins-722377fb75a868a0"
   # identity_store_id = "gerardvm"
-  # identity_store_id = "d-9067f2f77f"
-  identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
+  identity_store_id = "d-9067f2f77f"
+  # identity_store_id = tolist(data.aws_ssoadmin_instances.instances.identity_store_ids)[0]
   # groups = yamldecode(file("./example_groups.yaml"))
 }
 
