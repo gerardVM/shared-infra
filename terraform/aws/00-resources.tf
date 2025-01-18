@@ -1,9 +1,10 @@
 locals {
-    aws = yamldecode(file("${path.root}/../../${var.config}")).aws
+  aws = yamldecode(file("${path.root}/../../${var.config}")).aws
 }
 
 variable "config" {
-  type = string
+  type    = string
+  default = "config.yaml"
 }
 
 terraform {
