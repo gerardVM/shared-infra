@@ -5,10 +5,10 @@ TF_STATE_DIR    := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
 KMS_KEY         ?= arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487
 
 decrypt-config:
-	@sops -d config.enc.yaml > config.yaml
+	@sops -d ${AWS_ACCOUNT}.enc.yaml > ${AWS_ACCOUNT}.yaml
 
 encrypt-config:
-	@sops -e --kms ${KMS_KEY} --input-type yaml config.yaml > config.enc.yaml
+	@sops -e --kms ${KMS_KEY} --input-type yaml ${AWS_ACCOUNT}.yaml > ${AWS_ACCOUNT}.enc.yaml
 
 decrypt-tfstate:
 	@cd ${TF_STATE_DIR}; \
