@@ -1,5 +1,7 @@
 module "iam_sso" {
-  providers = { aws = aws.us-east-1 }
+  count = min(1, length(try(local.aws.iam.sso, [])))
+
+  providers = { aws = aws.identity_center }
   
   source = "git::https://github.com/gerardvm/terraform-aws-iam-identity-center?ref=2.1.0"
 
@@ -11,13 +13,17 @@ module "iam_sso" {
 }
 
 resource "aws_s3_bucket" "sso_config" {
+  count = min(1, length(try(local.aws.iam.sso, [])))
+
   bucket = "sso-${data.aws_caller_identity.current.account_id}"
 
-  provider = aws.us-east-1
+  provider = aws.identity_center
 }
 
 resource "aws_s3_object" "me" {
-  bucket  = aws_s3_bucket.sso_config.id
+  count = min(1, length(try(local.aws.iam.sso, [])))
+  
+  bucket  = aws_s3_bucket.sso_config[0].id
   key     = "config"
   content = templatefile("./templates/config.tftpl", {
     sso_start_url  = local.aws.iam.sso.config.sso_start_url
@@ -27,5 +33,5 @@ resource "aws_s3_object" "me" {
   })
   content_type = "text/plain"
   
-  provider = aws.us-east-1
+  provider = aws.identity_center
 }

@@ -1,10 +1,10 @@
 locals {
-    aws = yamldecode(file("${path.root}/../../${var.configuration}")).aws
+    aws = yamldecode(file("${path.root}/../../${var.config_file}")).aws
 }
 
-variable "configuration" {
+variable "config_file" {
   type = string
-  default = "config.yaml" # REMOVE ASAP
+  default = "config.yaml"
 }
 
 terraform {
@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias  = "us-east-1"
+  alias  = "identity_center"
   region = "us-east-1"
 }
 
