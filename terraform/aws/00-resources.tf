@@ -4,7 +4,6 @@ locals {
 
 variable "config" {
   type = string
-  default = "config.yaml"
 }
 
 terraform {

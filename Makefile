@@ -1,7 +1,6 @@
 TF_COMPONENT    ?= aws
 TF_DIR          := ${PWD}/terraform/${TF_COMPONENT}
 AWS_ACCOUNT     ?= account_0
-TF_VAR_config   ?= ${AWS_ACCOUNT}.yaml
 TF_STATE_DIR    := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
 TF_PROFILE      ?= default
 KMS_KEY         ?= arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487
@@ -30,7 +29,7 @@ tf-init:
 	@cd ${TF_DIR} && terraform init -reconfigure
 
 tf-plan: tf-init tf-workspace
-	@cd ${TF_DIR} && terraform plan -out=${AWS_ACCOUNT}.out
+	@cd ${TF_DIR} && terraform plan -var="config=$(AWS_ACCOUNT).yaml" -out=${AWS_ACCOUNT}.out
 
 tf-apply:
 	@cd ${TF_DIR} && terraform apply ${AWS_ACCOUNT}.out
