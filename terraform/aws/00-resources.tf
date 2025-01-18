@@ -1,9 +1,14 @@
 locals {
-    aws = yamldecode(file("${path.root}/../../config.yaml")).aws
+    aws = yamldecode(file("${path.root}/../../${var.configuration}")).aws
+}
+
+variable "configuration" {
+  type = string
+  default = "config.yaml" # REMOVE ASAP
 }
 
 terraform {
-  required_version = ">= 1.4.4"
+  required_version = "~> 1.10.0"
 
   required_providers {
     aws = {

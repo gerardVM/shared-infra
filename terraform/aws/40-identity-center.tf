@@ -3,7 +3,7 @@ module "iam_sso" {
   
   source = "github.com/gerardvm/terraform-aws-iam-identity-center?ref=2.1.0"
 
-  alias_to_id_map       = local.aws.iam.sso.alias_to_id_map
+  alias_to_id_map       = { for account in local.aws.accounts : account.name => account.id }
   managed_policies_map  = local.aws.iam.sso.managed_policies_map
   users_data            = local.aws.iam.sso.users
   groups_data           = local.aws.iam.sso.groups
