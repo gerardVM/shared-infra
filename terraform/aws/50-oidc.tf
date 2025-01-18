@@ -10,7 +10,7 @@ locals {
 }
 
 resource "aws_iam_openid_connect_provider" "oidc" {
-  count = can(local.aws.iam.oidc) ? 1 : 0
+  count = min(1, length(try(local.aws.iam.oidc, [])))
 
   url             = local.aws.iam.oidc.url
   client_id_list  = local.aws.iam.oidc.client_id_list
@@ -18,7 +18,7 @@ resource "aws_iam_openid_connect_provider" "oidc" {
 }
 
 resource "aws_iam_role" "oidc" {
-  for_each = local.aws.iam.oidc.roles
+  for_each = try(local.aws.iam.oidc.roles, {})
 
   name = each.key
 
@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "kms_policy" {
 }
 
 resource "aws_iam_role_policy" "kms" {
-  for_each = local.aws.iam.oidc.roles
+  for_each = try(local.aws.iam.oidc.roles, {})
 
   name   = "${each.key}-kms"
   role   = aws_iam_role.oidc[each.key].name
