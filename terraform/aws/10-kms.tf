@@ -1,5 +1,5 @@
 resource "aws_kms_key" "shared_key" {
-  for_each = { for key in local.aws.kms-keys : key.name => key }
+  for_each = { for key in try(local.aws.kms-keys, {}) : key.name => key }
 
   description             = each.value.description
   deletion_window_in_days = each.value.deletion_window
