@@ -1,16 +1,16 @@
 locals {
-    oidc_policies = flatten([
-        for role, role_data in try(local.aws.iam.oidc.roles, []) : [
-            for policy in try(role_data.policies, []) : {
-                role = role
-                policy = policy
-            }
-        ]
-    ])
+  oidc_policies = flatten([
+    for role, role_data in try(local.aws.iam.oidc.roles, []) : [
+      for policy in try(role_data.policies, []) : {
+        role   = role
+        policy = policy
+      }
+    ]
+  ])
 }
 
 resource "aws_iam_openid_connect_provider" "oidc" {
-  count = can(local.aws.iam.oidc) ? 1 : 0
+  count = min(1, length(try(local.aws.iam.oidc, [])))
 
   url             = local.aws.iam.oidc.url
   client_id_list  = local.aws.iam.oidc.client_id_list
@@ -18,29 +18,29 @@ resource "aws_iam_openid_connect_provider" "oidc" {
 }
 
 resource "aws_iam_role" "oidc" {
-  for_each = local.aws.iam.oidc.roles
+  for_each = try(local.aws.iam.oidc.roles, {})
 
   name = each.key
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-        for index, repository in each.value.repositories : {
-            Effect    = "Allow"
-            Principal = {
-                Federated = aws_iam_openid_connect_provider.oidc[0].arn
-            }
-            Action = "sts:AssumeRoleWithWebIdentity"
-            Condition = {
-            StringEquals = {
-                "${aws_iam_openid_connect_provider.oidc[0].url}:aud" = aws_iam_openid_connect_provider.oidc[0].client_id_list
-                }
-            StringLike = {
-                "${aws_iam_openid_connect_provider.oidc[0].url}:sub" = "repo:${repository}:*"
-                }
-            }
+      for index, repository in each.value.repositories : {
+        Effect = "Allow"
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.oidc[0].arn
         }
-      ]
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${aws_iam_openid_connect_provider.oidc[0].url}:aud" = aws_iam_openid_connect_provider.oidc[0].client_id_list
+          }
+          StringLike = {
+            "${aws_iam_openid_connect_provider.oidc[0].url}:sub" = "repo:${repository}:*"
+          }
+        }
+      }
+    ]
   })
 }
 
@@ -53,14 +53,14 @@ resource "aws_iam_role_policy_attachment" "oidc" {
 
 data "aws_iam_policy_document" "kms_policy" {
   statement {
-    effect = "Allow"
-    actions = [ "kms:*" ]
+    effect    = "Allow"
+    actions   = ["kms:*"]
     resources = ["*"]
   }
 }
 
 resource "aws_iam_role_policy" "kms" {
-  for_each = local.aws.iam.oidc.roles
+  for_each = try(local.aws.iam.oidc.roles, {})
 
   name   = "${each.key}-kms"
   role   = aws_iam_role.oidc[each.key].name

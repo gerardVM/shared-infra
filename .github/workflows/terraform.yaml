@@ -17,19 +17,23 @@ jobs:
   run-infra:
     name: Run infra
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        aws_account: [account_0, account_1]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
+          role-to-assume: arn:aws:iam::${{ matrix.aws_account == 'account_0' && vars.ACCOUNT_0_ID || vars.ACCOUNT_1_ID }}:role/${{ vars.AWS_ROLE }}
           role-session-name: shared-infra
           aws-region: ${{ vars.AWS_REGION }}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.4.4
+          terraform_version: 1.10.4
       - name: Install sops
         run: |
           SOPS_VERSION=$(curl -sL https://api.github.com/repos/mozilla/sops/releases/latest | jq -r '.tag_name')
@@ -38,11 +42,11 @@ jobs:
           sudo cp /tmp/sops /usr/local/bin/sops
       - name: Terraform Plan
         run: |
-          make tf-plan-enc
+          make tf-plan-enc AWS_ACCOUNT=${{ matrix.aws_account }}
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: |
-          make tf-apply-enc
+          make tf-apply-enc AWS_ACCOUNT=${{ matrix.aws_account }}
       - name: git commit and push tfstate files
         if: github.ref == 'refs/heads/main'
         env: 
@@ -51,6 +55,7 @@ jobs:
         run: |
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "gerardVM@users.noreply.github.com"
-          git add terraform/aws/terraform.tfstate*
+          git add terraform/aws/terraform.tfstate.d/${{ matrix.aws_account }}/terraform.tfstate*
           git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git pull --rebase origin master
           git push
