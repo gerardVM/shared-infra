@@ -2,7 +2,8 @@ TF_COMPONENT    ?= aws
 TF_DIR          := ${PWD}/terraform/${TF_COMPONENT}
 AWS_ACCOUNT     ?= account_0
 TF_STATE_DIR    := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
-KMS_KEY         ?= arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487
+
+-include Makefile.local
 
 decrypt-config:
 	@sops -d ${AWS_ACCOUNT}.enc.yaml > ${AWS_ACCOUNT}.yaml
