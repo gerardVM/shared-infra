@@ -42,11 +42,11 @@ jobs:
           sudo cp /tmp/sops /usr/local/bin/sops
       - name: Terraform Plan
         run: |
-          make tf-plan-enc AWS_ACCOUNT=${{ matrix.aws_account }} KMS_KEY=${{ vars.KMS_KEY }}
+          make tf-plan-enc AWS_ACCOUNT=${{ matrix.aws_account }}
       - name: Terraform Apply
         # if: github.ref == 'refs/heads/main'
         run: |
-          make tf-apply-enc AWS_ACCOUNT=${{ matrix.aws_account }} KMS_KEY=${{ vars.KMS_KEY }}
+          make tf-apply-enc AWS_ACCOUNT=${{ matrix.aws_account }}
       - name: git commit and push tfstate files
         # if: github.ref == 'refs/heads/main'
         env: 
