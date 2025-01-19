@@ -20,9 +20,7 @@ resource "aws_kms_key_policy" "shared_key" {
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.id}:root"
         }
-        Action    = [
-          "kms:*"
-        ]
+        Action    = "kms:*"
         Resource  = "*"
       },
       {
@@ -35,9 +33,7 @@ resource "aws_kms_key_policy" "shared_key" {
                             ]
                           ]])
         }
-        Action    = [
-          "kms:*"
-        ]
+        Action    = "kms:*"
         Resource  = "*"
       }
     ]
