@@ -1,5 +1,5 @@
 resource "aws_budgets_budget" "budget" {
-  count = length(local.aws.budgets)
+  count = min(1, length(try(local.aws.budgets, [])))
 
   budget_type       = "COST"
   limit_amount      = split(" ", local.aws.budgets[count.index].limit)[0]
