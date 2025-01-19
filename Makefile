@@ -5,11 +5,20 @@ TF_STATE_DIR    := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
 
 -include Makefile.local
 
-decrypt-config:
-	@sops -d ${AWS_ACCOUNT}.enc.yaml > ${AWS_ACCOUNT}.yaml
+decrypt-configs:
+	@for file in *.enc.yaml; do \
+		base=$$(basename $$file .enc.yaml); \
+		sops -d $$file > "$${base}.yaml"; \
+	done
 
-encrypt-config:
-	@sops -e --kms ${KMS_KEY} --input-type yaml ${AWS_ACCOUNT}.yaml > ${AWS_ACCOUNT}.enc.yaml
+encrypt-configs:
+	@for file in *.yaml; do \
+		case $$file in \
+			*.enc.yaml) continue ;; \
+		esac; \
+		base=$$(basename $$file .yaml); \
+		sops -e --kms ${KMS_KEY} --input-type yaml $$file > "$${base}.enc.yaml"; \
+	done
 
 decrypt-tfstate:
 	@cd ${TF_STATE_DIR}; \
@@ -37,8 +46,8 @@ tf-apply:
 tf-destroy:
 	@cd ${TF_DIR} && terraform destroy
 
-tf-plan-enc: decrypt-config decrypt-tfstate tf-plan encrypt-tfstate
+tf-plan-enc: decrypt-configs decrypt-tfstate tf-plan encrypt-tfstate
 
 tf-apply-enc: decrypt-tfstate tf-apply encrypt-tfstate
 
-tf-destroy-enc: decrypt-config decrypt-tfstate tf-destroy encrypt-tfstate
+tf-destroy-enc: decrypt-configs decrypt-tfstate tf-destroy encrypt-tfstate
