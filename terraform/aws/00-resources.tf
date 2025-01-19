@@ -1,5 +1,6 @@
 locals {
   aws = yamldecode(file("${path.root}/../../${var.config}")).aws
+  account_0_aws = yamldecode(file("${path.root}/../../account_0.yaml")).aws
 }
 
 variable "config" {
