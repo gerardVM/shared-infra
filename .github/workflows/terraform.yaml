@@ -59,6 +59,7 @@ jobs:
         run: |
           git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git config --global user.email "gerardVM@users.noreply.github.com"
+          git pull --rebase origin master
           git add terraform/aws/terraform.tfstate.d/${{ matrix.aws_account }}/terraform.tfstate*
           git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
           git push
