@@ -21,17 +21,13 @@ jobs:
       fail-fast: false
       matrix:
         aws_account: [account_0, account_1]
-    vars:
-      account_ids:
-        account_0: ${{ vars.ACCOUNT_0_ID }}
-        account_1: ${{ vars.ACCOUNT_1_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::${{ vars.account_ids[matrix.aws_account] }}:role/${{ vars.AWS_ROLE }}
+          role-to-assume: arn:aws:iam::${{ matrix.aws_account == 'account_0' && vars.ACCOUNT_0_ID || vars.ACCOUNT_1_ID }}:role/${{ vars.AWS_ROLE }}
           role-session-name: shared-infra
           aws-region: ${{ vars.AWS_REGION }}
       - name: Setup Terraform
