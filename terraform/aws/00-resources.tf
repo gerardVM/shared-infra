@@ -1,6 +1,6 @@
 locals {
-  aws           = yamldecode(file("${path.root}/../../${var.config}")).aws
-  account_0_aws = yamldecode(file("${path.root}/../../account_0.yaml")).aws
+  aws           = yamldecode(file("${path.root}/.terraform/${var.config}")).aws
+  account_0_aws = yamldecode(file("${path.root}/.terraform/account_0.yaml")).aws
 }
 
 variable "config" {
