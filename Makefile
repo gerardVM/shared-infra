@@ -45,7 +45,7 @@ tf-workspace:
 tf-init:
 	@cd ${TF_DIR} && terraform init -reconfigure
 
-tf-plan: merge_configs tf-init tf-workspace
+tf-plan: merge-configs tf-init tf-workspace
 	@cd ${TF_DIR} && terraform plan -var="config=$(AWS_ACCOUNT).yaml" -out=${AWS_ACCOUNT}.out
 
 tf-apply:
