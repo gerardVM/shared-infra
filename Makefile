@@ -1,6 +1,6 @@
 TF_COMPONENT ?= aws
-TF_DIR       := ${PWD}/terraform/${TF_COMPONENT}
 AWS_ACCOUNT  ?= account_0
+TF_DIR       := ${PWD}/terraform/${TF_COMPONENT}
 TF_STATE_DIR := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
 
 export ${KMS_KEY}
@@ -20,6 +20,7 @@ encrypt-configs:
 	done
 
 merge-configs:
+	@mkdir -p ${TF_DIR}/.terraform
 	@for file in *.dec.yaml; do \
 		case $$file in \
 			all_accounts.dec.yaml) continue ;; \
