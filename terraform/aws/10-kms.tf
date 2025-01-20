@@ -15,27 +15,27 @@ resource "aws_kms_key_policy" "shared_key" {
     Id      = each.key
     Statement = [
       {
-        Sid       = "Enable IAM User Permissions"
-        Effect    = "Allow"
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.id}:root"
         }
-        Action    = "kms:*"
-        Resource  = "*"
+        Action   = "kms:*"
+        Resource = "*"
       },
       {
-        Sid       = "Enable some roles to use the key"
-        Effect    = "Allow"
+        Sid    = "Enable some roles to use the key"
+        Effect = "Allow"
         Principal = {
-          AWS = flatten([ for k, v in try(each.value.allowed, {}) : [
-                            for role in v : [
-                              "arn:aws:iam::${local.account_0_aws.accounts[k].id}:role/${role}"
-                            ]
-                          ]])
+          AWS = flatten([for k, v in try(each.value.allowed, {}) : [
+            for role in v : [
+              "arn:aws:iam::${local.account_0_aws.accounts[k].id}:role/${role}"
+            ]
+          ]])
         }
-        Action    = "kms:*"
-        Resource  = "*"
+        Action   = "kms:*"
+        Resource = "*"
       }
     ]
-})
+  })
 }
