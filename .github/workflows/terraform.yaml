@@ -21,6 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         aws_account: [account_0, account_1]
+    env:
+      KMS_KEY: ${{ vars.KMS_KEY }}
+      TF_VERSION: "1.10.4"
+      SOPS_VERSION: "3.9.1"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,11 +37,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.10.4
+          terraform_version: ${{ env.TF_VERSION }}
       - name: Install sops
         run: |
-          SOPS_VERSION=$(curl -sL https://api.github.com/repos/mozilla/sops/releases/latest | jq -r '.tag_name')
-          wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64
+          wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/v${{ env.SOPS_VERSION }}/sops-v${{ env.SOPS_VERSION }}.linux.amd64
           chmod +x /tmp/sops
           sudo cp /tmp/sops /usr/local/bin/sops
       - name: Terraform Plan
