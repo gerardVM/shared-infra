@@ -8,35 +8,48 @@ resource "aws_kms_key" "shared_key" {
 }
 
 resource "aws_kms_key_policy" "shared_key" {
-  for_each = { for key in try(local.aws.kms-keys, {}) : key.name => key if can(key.allowed) }
+  for_each = { for key in try(local.aws.kms-keys, {}) : key.name => key if can(key.extra_policy) }
 
   key_id = aws_kms_key.shared_key[each.key].id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Id      = each.key
-    Statement = [
-      {
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.id}:root"
-        }
-        Action   = "kms:*"
-        Resource = "*"
-      },
-      {
-        Sid    = "Enable some services to use the key"
-        Effect = "Allow"
-        Principal = {
-          AWS = flatten([for k, v in try(each.value.allowed, {}) : [
-            for role in v : [
-              "arn:aws:${role.service}::${local.account_0_aws.accounts[k].id}:${role.type}/${role.name}"
-            ]
-          ]])
-        }
-        Action   = "kms:*"
-        Resource = "*"
+  policy = data.aws_iam_policy_document.shared_key[each.key].json
+}
+
+data "aws_iam_policy_document" "shared_key" {
+  for_each = { for key in try(local.aws.kms-keys, {}) : key.name => key if can(key.extra_policy) }
+
+  policy_id = each.key
+  statement {
+    sid       = "Enable IAM User Permissions"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.id}:root"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+
+  dynamic "statement" {
+    for_each = { for statement in try(each.value.extra_policy, []) : statement.id => statement }
+
+    content {
+      sid       = try(statement.value.id, "")
+      effect    = try(statement.value.effect, "Allow")
+      principals {
+        type        = try(statement.value.principals.type, "AWS")
+        identifiers = try(statement.value.principals.identifiers, [])
       }
-    ]
-  })
+      actions   = try(statement.value.actions, ["kms:*"])
+      resources = ["*"]
+      
+      dynamic "condition" {
+        for_each = can(statement.value.condition) ? [statement.value.condition] : []
+        content {
+          test     = try(condition.value.test, "StringEquals")
+          variable = try(condition.value.variable, "aws:SourceArn")
+          values   = try(condition.value.values, [""])
+        }
+      }
+    }
+  }
 }

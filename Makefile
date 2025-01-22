@@ -40,13 +40,16 @@ encrypt-tfstate:
 	sops -e --kms ${KMS_KEY} --input-type json terraform.tfstate.backup > terraform.tfstate.backup.enc.json; \
 	rm terraform.tfstate terraform.tfstate.backup;
 
-tf-workspace:
+tf-workspace-create:
+	@cd ${TF_DIR} && terraform workspace new ${AWS_ACCOUNT}
+
+tf-workspace-select:
 	@cd ${TF_DIR} && terraform workspace select ${AWS_ACCOUNT}
 
 tf-init:
 	@cd ${TF_DIR} && terraform init -reconfigure
 
-tf-plan: merge-configs tf-init tf-workspace
+tf-plan: merge-configs tf-init tf-workspace-select
 	@cd ${TF_DIR} && terraform plan -var="config=$(AWS_ACCOUNT).yaml" -out=${AWS_ACCOUNT}.out
 
 tf-apply:
