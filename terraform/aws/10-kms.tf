@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "shared_key" {
       actions   = try(statement.value.actions, ["kms:*"])
       resources = ["*"]
       condition {
-        test     = try(statement.value.condition.test, "")
+        test     = try(statement.value.condition.test, null)
         variable = try(statement.value.condition.variable, "")
         values   = try(statement.value.condition.values, [])
       }
