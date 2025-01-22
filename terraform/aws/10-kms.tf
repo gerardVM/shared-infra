@@ -4,6 +4,7 @@ resource "aws_kms_key" "shared_key" {
   description             = each.value.description
   deletion_window_in_days = each.value.deletion_window
   key_usage               = each.value.key_usage
+  enable_key_rotation     = try(each.value.enable_key_rotation, false)
 }
 
 resource "aws_kms_key_policy" "shared_key" {
@@ -24,12 +25,12 @@ resource "aws_kms_key_policy" "shared_key" {
         Resource = "*"
       },
       {
-        Sid    = "Enable some roles to use the key"
+        Sid    = "Enable some services to use the key"
         Effect = "Allow"
         Principal = {
           AWS = flatten([for k, v in try(each.value.allowed, {}) : [
             for role in v : [
-              "arn:aws:iam::${local.account_0_aws.accounts[k].id}:role/${role}"
+              "arn:aws:${role.service}::${local.account_0_aws.accounts[k].id}:${role.type}/${role.name}"
             ]
           ]])
         }
