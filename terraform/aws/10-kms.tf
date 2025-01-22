@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "shared_key" {
       resources = ["*"]
       
       dynamic "condition" {
-        for_each = [try(statement.value.condition, {})]
+        for_each = can(statement.value.condition) ? [statement.value.condition] : []
         content {
           test     = try(condition.value.test, "StringEquals")
           variable = try(condition.value.variable, "aws:SourceArn")
