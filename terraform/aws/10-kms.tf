@@ -41,10 +41,14 @@ data "aws_iam_policy_document" "shared_key" {
       }
       actions   = try(statement.value.actions, ["kms:*"])
       resources = ["*"]
-      condition {
-        test     = try(statement.value.condition.test, null)
-        variable = try(statement.value.condition.variable, "")
-        values   = try(statement.value.condition.values, [])
+      
+      dynamic "condition" {
+        for_each = [try(statement.value.condition, {})]
+        content {
+          test     = try(condition.value.test, "StringEquals")
+          variable = try(condition.value.variable, "aws:SourceArn")
+          values   = try(condition.value.values, [""])
+        }
       }
     }
   }
