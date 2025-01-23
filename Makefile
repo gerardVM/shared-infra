@@ -1,5 +1,6 @@
 TF_COMPONENT ?= aws
 AWS_ACCOUNT  ?= account_0
+CONFIG_DIR   := ${PWD}/config
 TF_DIR       := ${PWD}/terraform/${TF_COMPONENT}
 TF_STATE_DIR := ${TF_DIR}/terraform.tfstate.d/${AWS_ACCOUNT}
 
@@ -8,7 +9,7 @@ export ${KMS_KEY}
 -include Makefile.local
 
 decrypt-configs:
-	@for file in ${TF_DIR}/*.yaml; do \
+	@for file in ${CONFIG_DIR}/*.yaml; do \
 		base=$$(basename $$file .yaml); \
 		sops -d $$file > "$${base}.dec.yaml"; \
 	done
@@ -16,7 +17,7 @@ decrypt-configs:
 encrypt-configs:
 	@for file in *.dec.yaml; do \
 		base=$$(basename $$file .dec.yaml); \
-		sops -e --kms ${KMS_KEY} --input-type yaml $$file > "${TF_DIR}/$${base}.yaml"; \
+		sops -e --kms ${KMS_KEY} --input-type yaml $$file > "${CONFIG_DIR}/$${base}.yaml"; \
 	done
 
 merge-configs:
