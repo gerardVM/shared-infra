@@ -22,11 +22,11 @@ jobs:
       matrix:
         aws_account:
           - name: "account_0"
-            id: "${{ vars.ACCOUNT_0_ID }}"
+            id: "${{ secrets.ACCOUNT_0_ID }}"
           - name: "account_1"
-            id: "${{ vars.ACCOUNT_1_ID }}"
+            id: "${{ secrets.ACCOUNT_1_ID }}"
           - name: "account_2"
-            id: "${{ vars.ACCOUNT_2_ID }}"
+            id: "${{ secrets.ACCOUNT_2_ID }}"
     env:
       KMS_KEY: ${{ vars.KMS_KEY }}
       TF_VERSION: "1.10.4"
