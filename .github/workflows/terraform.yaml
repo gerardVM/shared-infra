@@ -25,7 +25,7 @@ jobs:
           - account_1
           - account_2
     env:
-      KMS_KEY: ${{ vars.KMS_KEY }}
+      KMS_KEY: ${{ secrets.KMS_KEY }}
       TF_VERSION: "1.10.4"
       SOPS_VERSION: "3.9.1"
     steps:
