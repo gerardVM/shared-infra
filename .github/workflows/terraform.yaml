@@ -23,7 +23,7 @@ jobs:
         aws_account:
           - account_0
           - account_1
-          - account_2
+          # - account_2
     env:
       KMS_KEY: ${{ secrets.KMS_KEY }}
       TF_VERSION: "1.10.4"
