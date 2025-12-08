@@ -5,6 +5,7 @@ resource "aws_kms_key" "shared_key" {
   deletion_window_in_days = each.value.deletion_window
   key_usage               = each.value.key_usage
   enable_key_rotation     = try(each.value.enable_key_rotation, false)
+  is_enabled              = try(each.value.is_enabled, true)
 }
 
 resource "aws_kms_key_policy" "shared_key" {
