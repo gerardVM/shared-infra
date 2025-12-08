@@ -35,13 +35,3 @@ resource "aws_s3_object" "me" {
 
   provider = aws.identity_center
 }
-
-moved {
-  from = module.iam_sso[0].aws_identitystore_user.users["gerard"]
-  to = module.iam_sso[0].aws_identitystore_user.users["user_1"]
-}
-
-moved {
-  from = module.iam_sso[0].aws_identitystore_user.users["gil"]
-  to = module.iam_sso[0].aws_identitystore_user.users["user_2"]
-}
