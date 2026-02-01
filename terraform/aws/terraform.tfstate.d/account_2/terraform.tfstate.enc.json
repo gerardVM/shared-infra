@@ -140,7 +140,7 @@
 	"sops": {
 		"kms": [
 			{
-				"arn": "arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487",
+				"arn": "${KMS_KEY}",
 				"created_at": "2025-02-22T18:28:16Z",
 				"enc": "AQICAHiFgQKnfZQbS0qksdcKnEcqfA3yd0cfbwGnH+L5HeKvdgEVgNpeoefghtPrMDMDSpfJAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMz0AEVIOvzjF87ukxAgEQgDubcalWp70dPWXIAkkVU7NDqjWAmtZ/KiXQxfkfyyN+eaKFx6BKqo4LMS28axNccEGBRO831RVROl558A==",
 				"aws_profile": ""
