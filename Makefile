@@ -39,6 +39,8 @@ encrypt-tfstate:
 	@cd ${TF_STATE_DIR}; \
 	sops -e --kms ${KMS_KEY} --input-type json terraform.tfstate > terraform.tfstate.enc.json; \
 	sops -e --kms ${KMS_KEY} --input-type json terraform.tfstate.backup > terraform.tfstate.backup.enc.json; \
+	sed -i "s|${KMS_KEY}|\$${KMS_KEY}|g" terraform.tfstate.enc.json; \
+	sed -i "s|${KMS_KEY}|\$${KMS_KEY}|g" terraform.tfstate.backup.enc.json; \
 	rm terraform.tfstate terraform.tfstate.backup;
 
 tf-workspace-create:
