@@ -33,7 +33,9 @@ merge-configs:
 decrypt-tfstate:
 	@cd ${TF_STATE_DIR}; \
 	sops -d terraform.tfstate.enc.json > terraform.tfstate; \
-	sops -d terraform.tfstate.backup.enc.json > terraform.tfstate.backup;
+	sops -d terraform.tfstate.backup.enc.json > terraform.tfstate.backup; \
+	sed -i "s|\$${KMS_KEY}|${KMS_KEY}|g" terraform.tfstate; \
+	sed -i "s|\$${KMS_KEY}|${KMS_KEY}|g" terraform.tfstate.backup;
 
 encrypt-tfstate:
 	@cd ${TF_STATE_DIR}; \
