@@ -1,7 +1,7 @@
 aws: {}
 sops:
     kms:
-        - arn: arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487
+        - arn: ${KMS_KEY}
           created_at: "2025-12-08T17:07:39Z"
           enc: AQICAHiFgQKnfZQbS0qksdcKnEcqfA3yd0cfbwGnH+L5HeKvdgEDNpEsZVmAN0QR8p5IzWJSAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMv0a+Azl8qZRbeDQWAgEQgDvF5kzRCrBp8pIi0kF2KlJ7+Uk/YP89obxSycnHXTy+Ct6uIPzfkQpauEKS8SJ67Y0YP1Hbo4yjYId0xA==
           aws_profile: ""

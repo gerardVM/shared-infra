@@ -4,7 +4,7 @@ aws:
         - ENC[AES256_GCM,data:0HuBeijp2cDubRZJUVyEkxXuvil2,iv:BB5hRJgWY4wgX7HX7CySt0YQSBuMJLQvYXIlj6MaO14=,tag:VjcGAQa+EICbTB4q1pjwJA==,type:str]
 sops:
     kms:
-        - arn: arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487
+        - arn: ${KMS_KEY}
           created_at: "2025-12-08T17:07:38Z"
           enc: AQICAHiFgQKnfZQbS0qksdcKnEcqfA3yd0cfbwGnH+L5HeKvdgEmenVSHdzj9lKZJ84olAYLAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMKr/vofgOssa//x4GAgEQgDu/wNvkjGwIKOTcNksP1I5PEdDvg9N0+HVeTbmJCTOg16i11L9z7SbDi4Y5btE9qzo68vRwBPPYoSsnWQ==
           aws_profile: ""
