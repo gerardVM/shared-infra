@@ -48,7 +48,7 @@ jobs:
           sudo cp /tmp/sops /usr/local/bin/sops
       - name: Replace KMS_KEY placeholders in config files
         run: |
-          find config -type f -name "*.yaml" -exec sed -i "s/\${KMS_KEY}/${{ env.KMS_KEY }}/g" {} +
+          find config -type f -name "*.yaml" -exec sed -i "s|\${KMS_KEY}|${{ env.KMS_KEY }}|g" {} +
       - name: Terraform Plan
         run: |
           make tf-plan-enc AWS_ACCOUNT=${{ matrix.aws_account }}
