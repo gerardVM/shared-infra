@@ -46,6 +46,9 @@ jobs:
           wget -O /tmp/sops https://github.com/mozilla/sops/releases/download/v${{ env.SOPS_VERSION }}/sops-v${{ env.SOPS_VERSION }}.linux.amd64
           chmod +x /tmp/sops
           sudo cp /tmp/sops /usr/local/bin/sops
+      - name: Replace KMS_KEY placeholders in config files
+        run: |
+          find config -type f -name "*.yaml" -exec sed -i "s/\${KMS_KEY}/${{ env.KMS_KEY }}/g" {} +
       - name: Terraform Plan
         run: |
           make tf-plan-enc AWS_ACCOUNT=${{ matrix.aws_account }}
