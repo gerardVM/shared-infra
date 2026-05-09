@@ -29,3 +29,14 @@ resource "aws_iam_policy" "this" {
     ]
   })
 }
+
+###############################################################################
+# IAM User Policy Attachment
+###############################################################################
+
+resource "aws_iam_user_policy_attachment" "this" {
+  for_each = try(local.aws.iam.machines, {})
+
+  user       = aws_iam_user.this[each.key].name
+  policy_arn = aws_iam_policy.this[each.key].arn
+}
