@@ -1,0 +1,19 @@
+aws:
+    region: ENC[AES256_GCM,data:VQqObEwbZRqE,iv:7rLHdqrLsyN3/hgo/j7Ao9ZnLCMfqs1kReNmyy/mDiE=,tag:rN4+FJVsptjfFvGBlK2ZhA==,type:str]
+    buckets:
+        - ENC[AES256_GCM,data:eygfCzMSAy7sAk4M2/x7uSKROkuS,iv:N91lF6XpzczlOajxGtxvXdFq+cMKPXJHCtYR6mi1fFc=,tag:YrhLpsNimgxXY4JWv7XvQg==,type:str]
+sops:
+    kms:
+        - arn: ${KMS_KEY}
+          created_at: "2026-06-13T15:05:38Z"
+          enc: AQICAHiFgQKnfZQbS0qksdcKnEcqfA3yd0cfbwGnH+L5HeKvdgHlObfI/Utl5nrx0KnGQproAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGuT2D2fae8jMXbN4AgEQgDvD5HoBaTw6hIp01PQw0PnA0s0gPlzuF7fjgUPc6hfI+tfuPgvFKBlNaXXfq1zOCUT6qEMWcoiyM/p9cg==
+          aws_profile: ""
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2026-06-13T15:05:40Z"
+    mac: ENC[AES256_GCM,data:W6IiwIt4FpsnBgl59kbrUjJXgOYzFnrauVx4Wt081UkX60vJpI9E/qf9PVTA39L5dHKvoXj6N1n2XPPSHNweN6IxzvaBx7EZid0/xwKjtmoSLZFkz3/sR3szwIeXUvpr36ZdjDurhRCCQo9kKVHhOb0e+/U9/IMXbAVX7zBz5HQ=,iv:jvxmb6OjIEkHB6fufEdT/vM16ahZSD9+OBSydesvxVg=,tag:N5cV11EkXsChVVdguAd0SA==,type:str]
+    pgp: []
+    unencrypted_suffix: _unencrypted
+    version: 3.9.1
